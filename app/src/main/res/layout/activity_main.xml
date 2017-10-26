@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.example.admin.mybledemo.activity.MainActivity">
+
+    <include
+        android:id="@+id/toolbar_main"
+        layout="@layout/toolbar_layout" />
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/recycle_listView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/connected_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar_main"
+            android:layout_marginBottom="10dp"
+            android:text="@string/lined_num" />
+
+        <Button
+            android:id="@+id/sendData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/toolbar_main"
+            android:text="发送数据" />
+
+
+        <Button
+            android:id="@+id/updateOta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/jump"
+            android:layout_alignBottom="@+id/jump"
+            android:layout_toStartOf="@+id/sendData"
+            android:text="测试" />
+
+        <Button
+            android:id="@+id/jump"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar_main"
+            android:layout_toStartOf="@+id/updateOta"
+            android:onClick="junp"
+            android:text="跳转页面" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_wifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sendData"
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/sid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="wifi名称" />
+
+            <EditText
+                android:id="@+id/psd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="wifi密码" />
+
+            <EditText
+                android:id="@+id/default_Et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="这是默认的" />
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_wifi" />
+
+        <!--<FrameLayout-->
+        <!--android:layout_below="@id/toolbar_main"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<include layout="@layout/custom_drawerlayout" />-->
+
+        <!--</FrameLayout>-->
+    </RelativeLayout>
+</RelativeLayout>
