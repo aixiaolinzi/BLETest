@@ -227,7 +227,7 @@ public class MainActivity extends BaseActivity {
 
     private void initBle() {
         try {
-            mManager = BleManager.getInstance(this);
+            mManager = BleManager.getInstance(getApplicationContext());
             mManager.registerBleListener(mLisenter);
             boolean result = false;
             if (mManager != null) {
@@ -413,6 +413,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (mManager != null) {
+            mManager.clear();
             mManager.unService();
             mManager.unRegisterBleListener(mLisenter);
         }

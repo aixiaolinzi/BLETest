@@ -110,42 +110,6 @@ public class BleConfig {
 
 
     /**
-     * Sets the service UUID string
-     *
-     * @param uuidServiceText Service UUID string
-     */
-    public static void setUuidServiceText(String uuidServiceText) {
-        if (TextUtils.isEmpty(uuidServiceText)) {
-            return;
-        }
-        UUID_SERVICE = UUID.fromString(uuidServiceText);
-    }
-
-    /**
-     * Sets the Characteristic UUID string
-     *
-     * @param uuidCharacteristicText Characteristic UUID string
-     */
-    public static void setUuidCharacteristicText(String uuidCharacteristicText) {
-        if (TextUtils.isEmpty(uuidCharacteristicText)) {
-            return;
-        }
-        UUID_CHARACTERISTIC = UUID.fromString(uuidCharacteristicText);
-    }
-
-    /**
-     * Sets the Description UUID string
-     *
-     * @param uuidDescriptorText Description UUID string
-     */
-    public static void setUuidDescriptorText(String uuidDescriptorText) {
-        if (TextUtils.isEmpty(uuidDescriptorText)) {
-            return;
-        }
-        UUID_DESCRIPTOR = UUID.fromString(uuidDescriptorText);
-    }
-
-    /**
      * Sets the Notification UUID string
      *
      * @param uuidNotifyText Notification UUID string

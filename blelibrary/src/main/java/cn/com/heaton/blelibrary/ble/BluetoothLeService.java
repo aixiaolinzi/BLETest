@@ -43,7 +43,6 @@ public class BluetoothLeService extends Service {
     //    private BluetoothGattCharacteristic mWriteCharacteristic;//Writable GattCharacteristic object
     private List<BluetoothGattCharacteristic> mNotifyCharacteristics = new ArrayList<>();//Notification attribute callback array
     private int mNotifyIndex = 0;//Notification feature callback list
-    private boolean mOtaUpdating = false;//Whether the OTA is updated
 
     private Map<String, BluetoothGattCharacteristic> mWriteCharacteristicMap = new HashMap<>();
 
@@ -59,10 +58,6 @@ public class BluetoothLeService extends Service {
     //The device is currently connected
     private BluetoothDevice currentDevice = null;
 
-
-    private String addressDev = "";
-
-    private byte[] valueDev;
 
     private Runnable mConnectTimeout = new Runnable() { // 连接设备超时
         @Override
@@ -114,7 +109,6 @@ public class BluetoothLeService extends Service {
                 mNotifyIndex = 0;
                 //Start setting notification feature
                 displayGattServices(gatt.getDevice().getAddress(), getSupportedGattServices(gatt.getDevice().getAddress()));
-
                 boolean b = gatt.requestMtu(256);
                 Log.e(TAG, "是否成功设置+++" + b);
             } else {
@@ -207,10 +201,6 @@ public class BluetoothLeService extends Service {
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             super.onMtuChanged(gatt, mtu, status);
-            BluetoothGattCharacteristic gattCharacteristic = mWriteCharacteristicMap.get(addressDev);
-            gattCharacteristic.setValue(valueDev);
-            boolean va = gatt.setCharacteristicNotification(gattCharacteristic, true);
-            Log.e(TAG, "是否成功" + va);
         }
     };
 

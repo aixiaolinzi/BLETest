@@ -52,7 +52,6 @@ public class BleManager<T extends BleDevice> {
     private static BleManager instance;
     private BluetoothManager mBluetoothManager;//蓝牙管理服务
     private BleFactory<T> mBleFactory;
-//    private final Class<T> mDeviceClass;
 
 
 
@@ -132,9 +131,6 @@ public class BleManager<T extends BleDevice> {
         mContext = context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBleFactory = new BleFactory<>(context);
-//        Type superClass = getClass().getGenericSuperclass();
-//        Type type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
-//        mDeviceClass = getClass(type,0);
     }
 
     /**
