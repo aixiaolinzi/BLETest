@@ -164,7 +164,6 @@ public class BleManager<T extends BleDevice> {
     }
 
     public static <T extends BleDevice> BleManager<T> getInstance(Context context) throws Exception {
-//        mBleLisenter = bleLisenter;
         if (instance == null) {
             synchronized (BleManager.class) {
                 if (instance == null) {
@@ -335,59 +334,6 @@ public class BleManager<T extends BleDevice> {
         }
     };
 
-    /**
-     * Get the scanned bleDevice
-     *
-     * @return scanned bleDevice
-     */
-    public List<T> getScanBleDevice() {
-        return mScanDevices;
-    }
-
-    public int getScanBleSize() {
-        return mScanDevices.size();
-    }
-
-
-    public T getBleDevice(int index) {
-        return mScanDevices.get(index);
-    }
-
-
-    /**
-     * Get the listener
-     *
-     * @return Listener object
-     */
-    public List<BleLisenter> getBleListeners() {
-        return mBleLisenters;
-    }
-
-    /**
-     *   Get the device type   for example: BleDevice.class
-     * @return
-     */
-//    public Class<T> getDeviceClass(){
-//        return mDeviceClass;
-//    }
-
-    /**
-     * Add Scanned BleDevice
-     *
-     * @param device BleDevice
-     */
-    public void addBleDevice(T device) {
-        if (device == null) {
-            return;
-        }
-        synchronized (mScanDevices) {
-            if (mScanDevices.contains(device)) {
-                return;
-            }
-            mScanDevices.add(device);
-        }
-    }
-
     public boolean contains(BluetoothDevice device) {
         if (device == null) {
             return false;
@@ -474,36 +420,6 @@ public class BleManager<T extends BleDevice> {
     public ArrayList<T> getConnetedDevices() {
         return mConnetedDevices;
     }
-//    public List<BluetoothDevice> getConnectedDevices() {
-//        if (mBluetoothLeService != null) {
-//            return mBluetoothLeService.getConnectedDevices();
-//        }
-//        return null;
-//    }
-
-
-    /**
-     * Add the device being connected
-     */
-    public boolean addConnectingDevice(T device) {
-        if (device == null || mScanDevices.contains(device)) {
-            return false;
-        }
-        synchronized (mLocker) {
-            if (!mConnectingDevices.contains(device)) {
-                return false;
-            }
-            mConnectingDevices.add(device);
-            return true;
-        }
-    }
-
-    /**
-     * Get the device being connected
-     */
-    public List<T> getConnectingDevices() {
-        return mConnectingDevices;
-    }
 
     /**
      * connect bleDevice
@@ -554,17 +470,7 @@ public class BleManager<T extends BleDevice> {
         }
     }
 
-    /**
-     * Get the system Bluetooth manager
-     *
-     * @return Manager object
-     */
-    public BluetoothManager getBluetoothManager() {
-        if (mBluetoothManager == null) {
-            mBluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-        }
-        return mBluetoothManager;
-    }
+
 
     //Release Empty all resources
     public void clear() {
@@ -658,7 +564,6 @@ public class BleManager<T extends BleDevice> {
             collectionInt[i] = bb[i - aa.length];
         }
         return collectionInt;
-
     }
 
 }

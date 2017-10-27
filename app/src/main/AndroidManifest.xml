@@ -26,7 +26,11 @@
         <activity
             android:name=".activity.DeviceControlActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.TestActivity"></activity>
+        <activity android:name=".activity.TestActivity" />
+        <activity
+            android:name=".activity.Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/Theme.DesignDemo"></activity>
     </application>
 
 </manifest>

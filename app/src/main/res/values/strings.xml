@@ -35,5 +35,6 @@
 
     <string name="line_success">连接成功</string>
     <string name="line_disconnect">断开连接</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 </resources>

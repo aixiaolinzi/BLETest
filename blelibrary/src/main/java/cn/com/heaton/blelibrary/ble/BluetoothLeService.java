@@ -209,24 +209,6 @@ public class BluetoothLeService extends Service {
         super.onCreate();
     }
 
-//    /**
-//     * Finds and returns the bluetooth device through Bluetooth address
-//     * @param address
-//     * @return
-//     */
-//    public BleDevice getBleDevice(String address){
-//        return new BleDevice(address.)
-//    }
-
-    /**
-     * Gets the connected device
-     *
-     * @return connected device
-     */
-    public List<BluetoothDevice> getConnectedDevices() {
-        if (mBluetoothManager == null) return null;
-        return mBluetoothManager.getConnectedDevices(BluetoothProfile.GATT);
-    }
 
 
     /**
@@ -255,10 +237,6 @@ public class BluetoothLeService extends Service {
         mHandler = handler;
     }
 
-    public Handler getHandler() {
-        return mHandler;
-    }
-
     /**
      * Initializes the ble Bluetooth device
      * 初始服务里面的蓝牙控制者
@@ -281,7 +259,6 @@ public class BluetoothLeService extends Service {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
-
         return true;
     }
 
@@ -311,13 +288,6 @@ public class BluetoothLeService extends Service {
         }
         //10s after the timeout prompt
         mHandler.postDelayed(mConnectTimeout, BleConfig.CONNECT_TIME_OUT);
-//        if (mBluetoothGattMap.get(address) != null && mConnectedAddressList.contains(address)) {
-//            if (mBluetoothGattMap.get(address).connect()) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
 
         //根据地址得到BluetoothDevice蓝牙设备的信息
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -326,9 +296,7 @@ public class BluetoothLeService extends Service {
             return false;
         }
         currentDevice = device;
-        // We want to directly connect to the device, so we are setting the
-        // autoConnect
-        // parameter to false
+        // We want to directly connect to the device, so we are setting the autoConnect parameter to false
         mHandler.obtainMessage(BleConfig.BleStatus.ConnectionChanged, 2, 0, device).sendToTarget();
         /**
          * this:上下文
@@ -359,7 +327,6 @@ public class BluetoothLeService extends Service {
         mNotifyIndex = 0;
         mBluetoothGattMap.get(address).disconnect();
         mNotifyCharacteristics.clear();
-//        mWriteCharacteristic = null;
         mWriteCharacteristicMap.remove(address);
     }
 

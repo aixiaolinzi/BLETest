@@ -185,23 +185,22 @@ public class MainActivity extends BaseActivity {
     };
 
 
-
     /**
      * 点击按钮发送WiFi的信息
      *
      * @param address
      * @return
      */
-    public boolean sendWifiInfo(String address,String sid,String psd,String mDefault) {
+    public boolean sendWifiInfo(String address, String sid, String psd, String mDefault) {
         boolean result;
-        if (TextUtils.isEmpty(mDefault)){
+        if (TextUtils.isEmpty(mDefault)) {
 //             result = mManager.sendData(address, sid, psd);
-             result = mManager.sendData(address, "sp_team", "lenovo123");
-        }else {
+            result = mManager.sendData(address, "sp_team", "lenovo123");
+        } else {
             result = mManager.sendDataDefault(address, mDefault);
         }
 //        Logger.e("result==" + result);
-        Log.e(TAG,"发送成功结果与否result=="+result);
+        Log.e(TAG, "发送成功结果与否result==" + result);
         if (result)
             Toast.makeText(MainActivity.this, "发送数据成功", Toast.LENGTH_SHORT).show();
 
@@ -219,9 +218,6 @@ public class MainActivity extends BaseActivity {
         //初始化蓝牙
         initBle();
         initView();
-
-
-
     }
 
 
@@ -260,8 +256,6 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
-
     public void junp(View view) {
         startActivity(new Intent(MainActivity.this, TestActivity.class));
     }
@@ -272,14 +266,10 @@ public class MainActivity extends BaseActivity {
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<BleDevice> list = mManager.getConnetedDevices();
-                if (list.size() > 0) {
-                    synchronized (mManager.getLocker()) {
-                        for (BleDevice device : list) {
 
-                        }
-                    }
-                }
+                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                startActivity(intent);
+
             }
         });
 
@@ -291,7 +281,7 @@ public class MainActivity extends BaseActivity {
                 if (list.size() > 0) {
                     synchronized (mManager.getLocker()) {
                         for (BleDevice device : list) {
-                            sendWifiInfo(device.getBleAddress(),editTextSid.getText().toString(),editTextPsd.getText().toString(),editTextDefault.getText().toString());
+                            sendWifiInfo(device.getBleAddress(), editTextSid.getText().toString(), editTextPsd.getText().toString(), editTextDefault.getText().toString());
                         }
                     }
                 }
@@ -418,8 +408,4 @@ public class MainActivity extends BaseActivity {
             mManager.unRegisterBleListener(mLisenter);
         }
     }
-
-
-
-
 }
