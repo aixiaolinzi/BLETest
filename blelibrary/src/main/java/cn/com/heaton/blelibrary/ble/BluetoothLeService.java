@@ -307,7 +307,6 @@ public class BluetoothLeService extends Service {
         if (bluetoothGatt != null) {
             mBluetoothGattMap.put(address, bluetoothGatt);
             Log.d(TAG, "Trying to create a new connection.");
-//            mConnectedAddressList.add(address);//暂时注释
             return true;
         }
         return false;

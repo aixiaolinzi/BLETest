@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -54,7 +53,6 @@ public class MainActivity extends BaseActivity {
     private TextView mConnectedNum;
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BleManager<BleDevice> mManager;
-    private String path;
 
     @ViewInit(R.id.sid)
     private EditText editTextSid;
@@ -266,9 +264,6 @@ public class MainActivity extends BaseActivity {
         mSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-                startActivity(intent);
 
             }
         });
