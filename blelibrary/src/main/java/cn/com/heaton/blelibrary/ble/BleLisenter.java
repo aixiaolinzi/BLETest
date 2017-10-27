@@ -100,4 +100,9 @@ public abstract class BleLisenter {
      *  Unable to initialize Bluetooth
      */
     public void onInitFailed(){}
+
+    /**
+     * 配网成功
+     */
+    public void onConnectionNetwork(String mac){}
 }

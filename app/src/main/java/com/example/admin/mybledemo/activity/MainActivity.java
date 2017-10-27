@@ -175,6 +175,13 @@ public class MainActivity extends BaseActivity {
             super.onDescriptorWriter(gatt);
             //可以选择性实现该方法   不需要则不用实现
         }
+
+        @Override
+        public void onConnectionNetwork(String mac) {
+            super.onConnectionNetwork(mac);
+            long time = System.currentTimeMillis() - timeMillis;
+            Log.e(BleConfig.TAG, "配网成功++" + time/1000);
+        }
     };
     private long timeMillis;
 

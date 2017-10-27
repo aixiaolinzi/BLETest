@@ -86,6 +86,8 @@ public class BleConfig {
 
     public static final byte[] VALUE_START = new byte[]{(byte) 0xa5, (byte) 0xa5};
     public static final byte[] VALUE_END = new byte[]{(byte) 0xb5, (byte) 0xb5};
+    public static final String VALUE_STRING_START = "a5a5";
+    public static final String VALUE_STRING_END = "b5b5";
 
     public static final String WIFI_SSID = "s";
     public static final String WIFI_P = "p";

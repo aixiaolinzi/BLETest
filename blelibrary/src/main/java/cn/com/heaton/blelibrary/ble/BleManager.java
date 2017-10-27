@@ -48,7 +48,7 @@ public class BleManager<T extends BleDevice> {
     private final static String TAG = "BleManager";
     public static final int REQUEST_ENABLE_BT = 1;
     private Context mContext;
-//    private BluetoothLeService mBluetoothLeService;
+    //    private BluetoothLeService mBluetoothLeService;
     //    private static BleLisenter mBleLisenter;
     private static List<BleLisenter> mBleLisenters = new ArrayList<>();
     private boolean mScanning;
@@ -133,6 +133,9 @@ public class BleManager<T extends BleDevice> {
                     break;
                 case BleConfig.BleStatus.ConnectionNetwork:
                     //连接网络成功
+                    for (BleLisenter bleLisenter : mBleLisenters) {
+                        bleLisenter.onConnectionNetwork((String) msg.obj);
+                    }
 
                     break;
                 case BleConfig.BleStatus.ServicesDiscovered:
@@ -408,10 +411,12 @@ public class BleManager<T extends BleDevice> {
                 byte[] valueGet = characteristic.getValue();
                 Log.i(TAG, gatt.getDevice().getAddress() + " -- onCharacteristicWrite: " + (characteristic.getValue() != null ? Arrays.toString(characteristic.getValue()) : ""));
                 mHandler.obtainMessage(BleConfig.BleStatus.Changed, characteristic).sendToTarget();
-                if (valueGet != null) {
-                    String stringValue = Arrays.toString(characteristic.getValue());
-                    if (stringValue.startsWith("[-91, -91,") || stringValue.endsWith(" -75, -75]")) {
-                        mHandler.obtainMessage(BleConfig.BleStatus.ConnectionNetwork, stringValue).sendToTarget();
+                if (valueGet != null && valueGet.length > 8) {
+                    String stringValue = bytesToHexString(valueGet);
+                    if (stringValue.startsWith(BleConfig.VALUE_STRING_START) && stringValue.endsWith(BleConfig.VALUE_STRING_END)) {
+                        String strMac = stringValue.substring(4, stringValue.length() - 4);
+                        String upperCase = strMac.toUpperCase();
+                        mHandler.obtainMessage(BleConfig.BleStatus.ConnectionNetwork, upperCase).sendToTarget();
                     }
                 }
             }
@@ -481,7 +486,7 @@ public class BleManager<T extends BleDevice> {
                     setCharacteristicNotification(gatt, mNotifyCharacteristics.get(mNotifyIndex++), true);
                 }
 
-                sendData(address,"sp_team", "lenovo123");
+                sendData(address, "sp_team", "lenovo123");
             }
         }
     }
@@ -704,8 +709,8 @@ public class BleManager<T extends BleDevice> {
             for (T bleDevice : mConnetedDevices) {
                 disconnect(bleDevice.getBleAddress());
             }
-
-            mConnectedAddressList.clear();
+            if (mConnectedAddressList != null)
+                mConnectedAddressList.clear();
             mConnetedDevices.clear();
             mConnectingDevices.clear();
             mScanDevices.clear();
@@ -795,6 +800,28 @@ public class BleManager<T extends BleDevice> {
         if (mContext != null) {
 
         }
+    }
+
+
+    /**
+     * byte转为十六进制
+     * @param src
+     * @return
+     */
+    public static String bytesToHexString(byte[] src){
+        StringBuilder stringBuilder = new StringBuilder("");
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                stringBuilder.append(0);
+            }
+            stringBuilder.append(hv);
+        }
+        return stringBuilder.toString();
     }
 
 }
