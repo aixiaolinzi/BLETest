@@ -71,33 +71,17 @@ public class BleConfig {
     /* Manufacturer Specific Data. */
     public static final int BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA = 0xFF;
 
-    /**
-     * Describes the UUID string  00002901-0000-1000-8000-00805f9b34fb
-     */
-    public static String UUID_DESCRIPTOR_TEXT = "00002902-0000-1000-8000-00805f9b34fb";
+
     /**
      * The service UUID string  0000180a-0000-1000-8000-00805f9b34fb
      */
     public static String UUID_SERVICE_TEXT = "0000180a-0000-1000-8000-00805f9b34fb";
 
-    /**
-     * The service UUID string
-     */
-    public static UUID UUID_SERVICE = UUID.fromString(UUID_SERVICE_TEXT);
 
-    public static UUID UUID_DESCRIPTOR = UUID.fromString(UUID_DESCRIPTOR_TEXT);
     /**
      * Attribute UUID string 00009999-0000-1000-8000-00805f9b34fb
      */
     public static String UUID_CHARACTERISTIC_TEXT = "00009999-0000-1000-8000-00805f9b34fb";
-    /**
-     * Sets the notification attribute UUID string d44bc439-abfd-45a2-b575-925416129601
-     */
-    public static String UUID_NOTIFY_TEXT = "d44bc439-abfd-45a2-b575-925416129601";
-    /**
-     * CHARACTERISTIC UUID string
-     */
-    public static UUID UUID_CHARACTERISTIC = UUID.fromString(UUID_CHARACTERISTIC_TEXT);
 
 
     public static final byte[] VALUE_START = new byte[]{(byte) 0xa5, (byte) 0xa5};
@@ -105,39 +89,5 @@ public class BleConfig {
 
     public static final String WIFI_SSID = "s";
     public static final String WIFI_P = "p";
-
-    
-
-
-    /**
-     * Sets the Notification UUID string
-     *
-     * @param uuidNotifyText Notification UUID string
-     */
-    public static void setUuidNotifyText(String uuidNotifyText) {
-        if (TextUtils.isEmpty(uuidNotifyText)) {
-            return;
-        }
-        UUID_NOTIFY_TEXT = uuidNotifyText;
-    }
-
-    public static UUID getUuidService() {
-        return UUID_SERVICE;
-    }
-
-    public static UUID getUuidCharacteristic() {
-        return UUID_CHARACTERISTIC;
-    }
-
-    public static UUID getUuidDescriptor() {
-        return UUID_DESCRIPTOR;
-    }
-
-    public static String getNotifyText() {
-        return UUID_NOTIFY_TEXT;
-    }
-
-
-
 
 }
