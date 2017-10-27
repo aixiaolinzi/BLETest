@@ -424,24 +424,6 @@ public class BluetoothLeService extends Service {
 
 
     /**
-     * Request a read on a given {@code BluetoothGattCharacteristic}. The read
-     * result is reported asynchronously through the
-     * {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
-     * callback.
-     *
-     * @param address        ble address
-     * @param characteristic The characteristic to read from.
-     */
-    public void readCharacteristic(String address, BluetoothGattCharacteristic characteristic) {
-        Log.d(TAG, "readCharacteristic: " + characteristic.getProperties());
-        if (mBluetoothAdapter == null || mBluetoothGattMap.get(address) == null) {
-            Log.d(TAG, "BluetoothAdapter is null");
-            return;
-        }
-        mBluetoothGattMap.get(address).readCharacteristic(characteristic);
-    }
-
-    /**
      * Enables or disables notification on a give characteristic.
      *
      * @param address        ble address
@@ -455,16 +437,15 @@ public class BluetoothLeService extends Service {
         }
         mBluetoothGattMap.get(address).setCharacteristicNotification(characteristic, enabled);
         //If the number of descriptors in the eigenvalue of the notification is greater than zero
-        if (characteristic.getDescriptors().size() > 0) {
-            //Filter descriptors based on the uuid of the descriptor
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID
-                    .fromString(BleConfig.UUID_DESCRIPTOR_TEXT));
-            if (descriptor != null) {
-                //Write the description value
-                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                mBluetoothGattMap.get(address).writeDescriptor(descriptor);
-            }
-        }
+//        if (characteristic.getDescriptors().size() > 0) {
+//            //Filter descriptors based on the uuid of the descriptor
+//            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(BleConfig.UUID_DESCRIPTOR_TEXT));
+//            if (descriptor != null) {
+//                //Write the description value
+//                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//                mBluetoothGattMap.get(address).writeDescriptor(descriptor);
+//            }
+//        }
 
     }
 
@@ -491,21 +472,12 @@ public class BluetoothLeService extends Service {
                 boolean writeable = isCharacteristicWriteable(characteristicTest);
                 Log.e(TAG, "displayGattServices测试可读: " + readable + "可写+" + writeable + "通知+" + notifiable);
             }
-
-
             if (uuid.equals(BleConfig.UUID_SERVICE_TEXT)) {
                 Log.d(TAG, "service_uuid: " + uuid);
                 List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
                 for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-                    uuid = gattCharacteristic.getUuid().toString();
                     mWriteCharacteristicMap.put(address, gattCharacteristic);
                     mNotifyCharacteristics.add(gattCharacteristic);
-
-                    int properties = gattCharacteristic.getProperties();
-//                    else if (gattCharacteristic.getProperties() == BluetoothGattCharacteristic.PROPERTY_NOTIFY) {
-//                        mNotifyCharacteristics.add(gattCharacteristic);
-//                        Log.e("mNotifyCharacteristics", "PROPERTY_NOTIFY");
-//                    }
                 }
                 //Really set up notifications
                 if (mNotifyCharacteristics != null && mNotifyCharacteristics.size() > 0) {
@@ -516,15 +488,6 @@ public class BluetoothLeService extends Service {
         }
     }
 
-    //Get a writable WriteCharacteristic object
-    public BluetoothGattCharacteristic getWriteCharacteristic(String address) {
-        synchronized (mLocker) {
-            if (mWriteCharacteristicMap != null) {
-                return mWriteCharacteristicMap.get(address);
-            }
-            return null;
-        }
-    }
 
     /**
      * Retrieves a list of supported GATT services on the connected device. This
@@ -539,19 +502,6 @@ public class BluetoothLeService extends Service {
             return null;
 
         return mBluetoothGattMap.get(address).getServices();
-    }
-
-    /**
-     * Read the RSSI for a connected remote device.
-     *
-     * @param address ble address
-     * @return Whether get rssi values is successful
-     */
-    public boolean getRssiVal(String address) {
-        if (mBluetoothGattMap.get(address) == null)
-            return false;
-
-        return mBluetoothGattMap.get(address).readRemoteRssi();
     }
 
 

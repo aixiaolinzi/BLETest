@@ -534,37 +534,6 @@ public class BleManager<T extends BleDevice> {
         }
     }
 
-    /**
-     * Set up notifications
-     *
-     * @param address        ble address
-     * @param characteristic Bluetooth device object
-     * @param enabled        Whether to set notifications
-     */
-    public void setCharacteristicNotification(String address, BluetoothGattCharacteristic characteristic, boolean enabled) {
-        if (mBluetoothLeService != null) {
-            mBluetoothLeService.setCharacteristicNotification(address, characteristic, enabled);
-        }
-    }
-
-    /**
-     * send data
-     * 发送数据
-     *
-     * @param address ble address
-     * @param data    data
-     * @return Whether send success
-     */
-    public boolean sendData(String address, byte[] data) {
-        boolean result = false;
-        synchronized (mLocker) {
-            if (mBluetoothLeService != null) {
-                result = mBluetoothLeService.writeCharacteristic(address, data);
-            }
-            return result;
-        }
-    }
-
 
     /**
      * 发送数据，就是WiFi名称和密码
