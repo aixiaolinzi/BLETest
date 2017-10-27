@@ -61,6 +61,7 @@ public class MainActivity extends BaseActivity {
     @ViewInit(R.id.default_Et)
     private EditText editTextDefault;
 
+
     /**
      * 辅助处理监听，连接上还是断开都是这里处理的。
      * 刷新页面也是这里
@@ -97,12 +98,6 @@ public class MainActivity extends BaseActivity {
         public void onLeScan(final BleDevice device, int rssi, byte[] scanRecord) {
             //扫描得到数据，并且在页面显示出来
             Logger.e("onLeScan");
-//            //可以选择性的根据scanRecord蓝牙广播包进行过滤
-//            如下 此处注释（根据你们产品的广播进行过滤或者根据产品的特定name或者address进行过滤也可以）
-//            if (!BleConfig.matchProduct(scanRecord)) {
-//                return;
-//            }
-//            Toast.makeText(MainActivity.this,"ssss",Toast.LENGTH_SHORT).show();
             synchronized (mManager.getLocker()) {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -181,6 +176,7 @@ public class MainActivity extends BaseActivity {
             //可以选择性实现该方法   不需要则不用实现
         }
     };
+    private long timeMillis;
 
 
     /**
@@ -190,12 +186,10 @@ public class MainActivity extends BaseActivity {
      * @return
      */
     public boolean sendWifiInfo(String address, String sid, String psd, String mDefault) {
-        boolean result;
+        boolean result = false;
         if (TextUtils.isEmpty(mDefault)) {
 //             result = mManager.sendData(address, sid, psd);
             result = mManager.sendData(address, "sp_team", "lenovo123");
-        } else {
-            result = mManager.sendDataDefault(address, mDefault);
         }
 //        Logger.e("result==" + result);
         Log.e(TAG, "发送成功结果与否result==" + result);
@@ -211,6 +205,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        timeMillis = System.currentTimeMillis();
+
         //初始化注解  替代findViewById
         LLAnnotation.viewInit(this);
         //初始化蓝牙
@@ -225,7 +221,6 @@ public class MainActivity extends BaseActivity {
             mManager.registerBleListener(mLisenter);
             boolean result = false;
             if (mManager != null) {
-                result = mManager.startService();//开启ble辅助的服务
                 if (!mManager.isBleEnable()) {//蓝牙未打开
                     mManager.turnOnBlueTooth(this);
                 } else {//已打开
@@ -240,12 +235,6 @@ public class MainActivity extends BaseActivity {
                             }
                         }
                     });
-                }
-            }
-            if (!result) {
-                Logger.e("服务绑定失败");
-                if (mManager != null) {
-                    mManager.startService();
                 }
             }
         } catch (Exception e) {
@@ -399,7 +388,6 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         if (mManager != null) {
             mManager.clear();
-            mManager.unService();
             mManager.unRegisterBleListener(mLisenter);
         }
     }

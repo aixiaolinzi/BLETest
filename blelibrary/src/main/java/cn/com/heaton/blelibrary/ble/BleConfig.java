@@ -43,7 +43,7 @@ public class BleConfig {
         int CONNECTED = 2505;
         int CONNECTING = 2504;
         int DISCONNECT = 2503;
-        int ConnectionChanged = 2511;
+        int ConnectionChanged = 2511;//0，断开；1，连接上；2，正在连接。
         int ServicesDiscovered = 2512;
         int Read = 2513;
         int Write = 2514;
@@ -89,5 +89,8 @@ public class BleConfig {
 
     public static final String WIFI_SSID = "s";
     public static final String WIFI_P = "p";
+
+    public static final String LENOVOASSISTANT = "LenovoAssistant";
+    public static final String TAG = "蓝牙配网";
 
 }

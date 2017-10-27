@@ -210,7 +210,6 @@ public class BluetoothLeService extends Service {
     }
 
 
-
     /**
      * 在服务中找到这个Binder
      */
@@ -318,6 +317,9 @@ public class BluetoothLeService extends Service {
      * @param address ble address
      */
     public void disconnect(final String address) {
+        if (mBluetoothGattMap == null) {
+            return;
+        }
         if (mBluetoothAdapter == null || mBluetoothGattMap.get(address) == null) {
 //            Log.e(TAG, mBluetoothGattMap.get(address).getDevice().getAddress());
             Log.w(TAG, "BluetoothAdapter not initialized");
@@ -432,7 +434,7 @@ public class BluetoothLeService extends Service {
                 Log.d(TAG, "service_uuid: " + uuid);
                 List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
                 for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-                    if (gattCharacteristic.getUuid().toString().equals(BleConfig.UUID_CHARACTERISTIC_TEXT)){
+                    if (gattCharacteristic.getUuid().toString().equals(BleConfig.UUID_CHARACTERISTIC_TEXT)) {
                         mWriteCharacteristicMap.put(address, gattCharacteristic);
                         mNotifyCharacteristics.add(gattCharacteristic);
                     }
