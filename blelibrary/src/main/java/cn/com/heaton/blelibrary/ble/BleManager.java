@@ -39,8 +39,9 @@ import static cn.com.heaton.blelibrary.ble.BleConfig.WIFI_P;
 import static cn.com.heaton.blelibrary.ble.BleConfig.WIFI_SSID;
 
 /**
- * This class provides various APIs for Bluetooth operation
- * Created by liulei on 2016/12/7.
+ * 蓝牙连接的服务类
+ * @author yzz
+ * Created on 2017/10/27 17:36
  */
 
 public class BleManager<T extends BleDevice> {
@@ -48,7 +49,6 @@ public class BleManager<T extends BleDevice> {
     private final static String TAG = "BleManager";
     public static final int REQUEST_ENABLE_BT = 1;
     private Context mContext;
-    //    private BluetoothLeService mBluetoothLeService;
     //    private static BleLisenter mBleLisenter;
     private static List<BleLisenter> mBleLisenters = new ArrayList<>();
     private boolean mScanning;
@@ -58,7 +58,6 @@ public class BleManager<T extends BleDevice> {
     private ArrayList<T> mConnectingDevices = new ArrayList<>();
     private final Object mLocker = new Object();
     private static BleManager instance;
-    private BluetoothManager mBluetoothManager;//蓝牙管理服务
     private BleFactory<T> mBleFactory;
 
     //The device is currently connected
@@ -188,12 +187,13 @@ public class BleManager<T extends BleDevice> {
         }
     }
 
-    public static <T extends BleDevice> BleManager<T> getInstance(Context context) throws Exception {
+    public static <T extends BleDevice> BleManager<T> getInstance(Context context, String ssid, String psw) throws Exception {
         if (instance == null) {
             synchronized (BleManager.class) {
                 if (instance == null) {
                     instance = new BleManager(context);
                 }
+                
             }
         }
         if (instance.isSupportBle()) {
@@ -389,9 +389,8 @@ public class BleManager<T extends BleDevice> {
             /**
              * 特征的问题写成功
              */
-            System.out.println("--------特征的回调----- status:" + status + "得到的值+" + Arrays.toString(characteristic.getValue()));
             synchronized (mLocker) {
-                Log.i(TAG, gatt.getDevice().getAddress() + " -- onCharacteristicWrite: " + status);
+                Log.i(BleConfig.TAG, gatt.getDevice().getAddress() + " -- 特征写成功onCharacteristicWrite: " + status);
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     mHandler.obtainMessage(BleConfig.BleStatus.Write, gatt).sendToTarget();
                 }
@@ -805,10 +804,11 @@ public class BleManager<T extends BleDevice> {
 
     /**
      * byte转为十六进制
+     *
      * @param src
      * @return
      */
-    public static String bytesToHexString(byte[] src){
+    public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder("");
         if (src == null || src.length <= 0) {
             return null;

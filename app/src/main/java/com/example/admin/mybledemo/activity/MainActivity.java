@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,8 +57,6 @@ public class MainActivity extends BaseActivity {
     private EditText editTextSid;
     @ViewInit(R.id.psd)
     private EditText editTextPsd;
-    @ViewInit(R.id.default_Et)
-    private EditText editTextDefault;
 
 
     /**
@@ -116,7 +113,6 @@ public class MainActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
                     for (int i = 0; i < mLeDeviceListAdapter.getCount(); i++) {
                         if (device.getBleAddress().equals(mLeDeviceListAdapter.getDevice(i).getBleAddress())) {
                             if (device.isConnected()) {
@@ -147,7 +143,6 @@ public class MainActivity extends BaseActivity {
         public void onReady(BluetoothDevice device) {
             super.onReady(device);
             Logger.e("onReady===+++++++可以写入数据了");
-//            changeLevelInner(device.getAddress());
         }
 
         @Override
@@ -186,26 +181,6 @@ public class MainActivity extends BaseActivity {
     private long timeMillis;
 
 
-    /**
-     * 点击按钮发送WiFi的信息
-     *
-     * @param address
-     * @return
-     */
-    public boolean sendWifiInfo(String address, String sid, String psd, String mDefault) {
-        boolean result = false;
-        if (TextUtils.isEmpty(mDefault)) {
-//             result = mManager.sendData(address, sid, psd);
-            result = mManager.sendData(address, "sp_team", "lenovo123");
-        }
-//        Logger.e("result==" + result);
-        Log.e(TAG, "发送成功结果与否result==" + result);
-        if (result)
-            Toast.makeText(MainActivity.this, "发送数据成功", Toast.LENGTH_SHORT).show();
-
-        return result;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -224,9 +199,8 @@ public class MainActivity extends BaseActivity {
 
     private void initBle() {
         try {
-            mManager = BleManager.getInstance(getApplicationContext());
+            mManager = BleManager.getInstance(getApplicationContext(),editTextSid.getText().toString(),editTextPsd.getText().toString());
             mManager.registerBleListener(mLisenter);
-            boolean result = false;
             if (mManager != null) {
                 if (!mManager.isBleEnable()) {//蓝牙未打开
                     mManager.turnOnBlueTooth(this);
@@ -269,13 +243,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 List<BleDevice> list = mManager.getConnetedDevices();
-                if (list.size() > 0) {
-                    synchronized (mManager.getLocker()) {
-                        for (BleDevice device : list) {
-                            sendWifiInfo(device.getBleAddress(), editTextSid.getText().toString(), editTextPsd.getText().toString(), editTextDefault.getText().toString());
-                        }
-                    }
-                }
+
             }
         });
         // Initializes list view adapter.

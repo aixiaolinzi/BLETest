@@ -53,7 +53,7 @@ public class BleConfig {
         int Start = 2518;
         int Stop = 2519;
         int ConnectTimeOut = 2510;
-        int OnReady = 2520;
+        int OnReady = 2520; //onDescriptorWrite测试获得数据成功，可以读取了
         int ConnectionNetwork = 2521;
     }
 
