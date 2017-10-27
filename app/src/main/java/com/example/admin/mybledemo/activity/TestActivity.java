@@ -39,7 +39,7 @@ public class TestActivity extends AppCompatActivity {
         LLAnnotation.viewInit(this);
 
         try {
-            mManager = BleManager.getInstance(this);
+            mManager = BleManager.getInstance(this,"","");
             mManager.registerBleListener(mLisenter);
         } catch (Exception e) {
             e.printStackTrace();
