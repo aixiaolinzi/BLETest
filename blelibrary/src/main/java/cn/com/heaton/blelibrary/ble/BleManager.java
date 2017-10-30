@@ -74,6 +74,7 @@ public class BleManager<T extends BleDevice> {
     private List<BluetoothGattCharacteristic> mNotifyCharacteristics = new ArrayList<>();//Notification attribute callback array
     private int mNotifyIndex = 0;//Notification feature callback list
     private Map<String, BluetoothGattCharacteristic> mWriteCharacteristicMap = new HashMap<>();//可以写的特征值  就是这里
+    private static String mSsid, mPsw;
 
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -135,7 +136,11 @@ public class BleManager<T extends BleDevice> {
                     if (bleLisenter != null) {
                         bleLisenter.onConnectionNetwork((String) msg.obj);
                     }
-
+                    break;
+                case BleConfig.BleStatus.ConnectionBleReturn:
+                    if (bleLisenter != null) {
+                        bleLisenter.onConnectionBleReturn((int) msg.obj);
+                    }
                     break;
                 case BleConfig.BleStatus.ServicesDiscovered:
                     if (bleLisenter != null) {
@@ -193,7 +198,8 @@ public class BleManager<T extends BleDevice> {
                 if (instance == null) {
                     instance = new BleManager(context);
                 }
-
+                mSsid = ssid;
+                mPsw = psw;
             }
         }
         if (instance.isSupportBle()) {
@@ -405,17 +411,23 @@ public class BleManager<T extends BleDevice> {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             //监听的通知发生变化，会走这里。
             System.out.println("--------onCharacteristicChanged----- " + "通知回调的值+" + Arrays.toString(characteristic.getValue()));
-
             synchronized (mLocker) {
                 byte[] valueGet = characteristic.getValue();
                 Log.i(TAG, gatt.getDevice().getAddress() + " -- onCharacteristicWrite: " + (characteristic.getValue() != null ? Arrays.toString(characteristic.getValue()) : ""));
                 mHandler.obtainMessage(BleConfig.BleStatus.Changed, characteristic).sendToTarget();
-                if (valueGet != null && valueGet.length > 8) {
-                    String stringValue = bytesToHexString(valueGet);
-                    if (stringValue.startsWith(BleConfig.VALUE_STRING_START) && stringValue.endsWith(BleConfig.VALUE_STRING_END)) {
-                        String strMac = stringValue.substring(4, stringValue.length() - 4);
-                        String upperCase = strMac.toUpperCase();
-                        mHandler.obtainMessage(BleConfig.BleStatus.ConnectionNetwork, upperCase).sendToTarget();
+                if (valueGet != null) {
+                    if (valueGet.length > BleConfig.BLE_RETURN_LENGTH) {
+                        String stringValue = bytesToHexString(valueGet);
+                        if (stringValue.startsWith(BleConfig.VALUE_STRING_START) && stringValue.endsWith(BleConfig.VALUE_STRING_END)) {
+                            String strMac = stringValue.substring(4, stringValue.length() - 4);
+                            String upperCase = strMac.toUpperCase();
+                            mHandler.obtainMessage(BleConfig.BleStatus.ConnectionNetwork, upperCase).sendToTarget();
+                        }
+                    } else if (valueGet.length == BleConfig.BLE_RETURN_LENGTH) {
+                        if (bytesIsBleReturn(valueGet)) {
+                            int returnCode = valueGet[2];
+                            mHandler.obtainMessage(BleConfig.BleStatus.ConnectionBleReturn, returnCode).sendToTarget();
+                        }
                     }
                 }
             }
@@ -424,10 +436,8 @@ public class BleManager<T extends BleDevice> {
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             UUID uuid = descriptor.getCharacteristic().getUuid();
-            Log.w(TAG, "onDescriptorWrite");
-            Log.e(TAG, "descriptor_uuid:" + uuid);
+            Log.e(BleConfig.TAG, "descriptor_uuid:" + uuid + " -- onDescriptorWrite: " + status);
             synchronized (mLocker) {
-                Log.e(TAG, " -- onDescriptorWrite: " + status);
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                 }
                 mHandler.obtainMessage(BleConfig.BleStatus.DescriptorWriter, gatt).sendToTarget();
@@ -438,16 +448,9 @@ public class BleManager<T extends BleDevice> {
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorRead(gatt, descriptor, status);
             UUID uuid = descriptor.getCharacteristic().getUuid();
-            Log.w(TAG, "onDescriptorRead");
-            Log.e(TAG, "descriptor_uuid:219" + uuid);
+            Log.e(BleConfig.TAG, "onDescriptorRead++descriptor_uuid:" + uuid);
             mHandler.obtainMessage(BleConfig.BleStatus.DescriptorRead, gatt).sendToTarget();
         }
-
-        @Override
-        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            System.out.println("rssi = " + rssi);
-        }
-
 
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
@@ -485,7 +488,7 @@ public class BleManager<T extends BleDevice> {
                     setCharacteristicNotification(gatt, mNotifyCharacteristics.get(mNotifyIndex++), true);
                 }
 
-                sendData(address, "sp_team", "lenovo");
+                sendData(address, mSsid, mPsw);
             }
         }
     }
@@ -571,22 +574,6 @@ public class BleManager<T extends BleDevice> {
         return mConnetedDevices;
     }
 
-//    /**
-//     * connect bleDevice
-//     * 连接设备，BluetoothLeService开始工作
-//     *
-//     * @param address ble address
-//     */
-//    public boolean connect(String address) {
-//        synchronized (mLocker) {
-//            boolean result = false;
-//            if (mBluetoothLeService != null) {
-//                result = mBluetoothLeService.connect(address);
-//            }
-//            return result;
-//        }
-//    }
-
 
     /**
      * connect bleDevice
@@ -596,7 +583,6 @@ public class BleManager<T extends BleDevice> {
      */
     public boolean connect(String address) {
         synchronized (mLocker) {
-
             if (mConnectedAddressList == null) {
                 mConnectedAddressList = new ArrayList<>();
             }
@@ -636,11 +622,7 @@ public class BleManager<T extends BleDevice> {
                 return true;
             }
             return false;
-
-
         }
-
-
     }
 
 
@@ -821,5 +803,27 @@ public class BleManager<T extends BleDevice> {
         }
         return stringBuilder.toString();
     }
+
+
+    /**
+     * byte数组是否是满足条件的返回码
+     *
+     * @param bytes
+     * @return
+     */
+    public static boolean bytesIsBleReturn(byte[] bytes) {
+        if (bytes == null) {
+            return false;
+        }
+        if (bytes.length < 5) {
+            return false;
+        }
+        if (bytes[0] == BleConfig.VALUE_START[0] && bytes[1] == BleConfig.VALUE_START[1]
+                && bytes[3] == BleConfig.VALUE_END[0] && bytes[4] == BleConfig.VALUE_END[1]) {
+            return true;
+        }
+        return false;
+    }
+
 
 }

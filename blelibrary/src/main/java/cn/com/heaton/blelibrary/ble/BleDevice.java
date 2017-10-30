@@ -3,8 +3,9 @@ package cn.com.heaton.blelibrary.ble;
 import android.bluetooth.BluetoothDevice;
 
 /**
- * Created by LiuLei on 2016/11/26.
- * If you need to set the Bluetooth object more properties and behavior can be inherited from the class     such as extends BleDevice
+ *
+ * @author yzz
+ * Created on 2017/10/30 14:31
  */
 
 public class BleDevice {
@@ -24,9 +25,8 @@ public class BleDevice {
     /**
      *  Connection Status:
      *  2503 Not Connected
-     *  2504 Connected
+     *  2504 Connecting
      *  2505 Connected
-     *  2506 Disconnected
      */
     private int mConnectionState = BleConfig.BleStatus.DISCONNECT;
 
@@ -50,12 +50,10 @@ public class BleDevice {
     }
 
     public boolean isConnected() {
-//        return mConnectionState == BluetoothProfile.STATE_CONNECTED;
         return mConnectionState == BleConfig.BleStatus.CONNECTED;
     }
 
-    public boolean isConnectting() {
-//        return mConnectionState == BluetoothProfile.STATE_CONNECTING;
+    public boolean isConnecting() {
         return mConnectionState == BleConfig.BleStatus.CONNECTING;
     }
 

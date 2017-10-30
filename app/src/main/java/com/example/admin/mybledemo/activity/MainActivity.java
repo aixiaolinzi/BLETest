@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity {
                             if (device.isConnected()) {
                                 mLeDeviceListAdapter.getDevice(i).setConnectionState(BleConfig.BleStatus.CONNECTED);
                                 Toast.makeText(MainActivity.this, R.string.line_success, Toast.LENGTH_SHORT).show();
-                            } else if (device.isConnectting()) {
+                            } else if (device.isConnecting()) {
                                 mLeDeviceListAdapter.getDevice(i).setConnectionState(BleConfig.BleStatus.CONNECTING);
                             } else {
                                 mLeDeviceListAdapter.getDevice(i).setConnectionState(BleConfig.BleStatus.DISCONNECT);
@@ -153,10 +153,6 @@ public class MainActivity extends BaseActivity {
             //硬件mcu 返回数据
         }
 
-        @Override
-        public void onWrite(BluetoothGatt gatt) {
-            //可以选择性实现该方法   不需要则不用实现
-        }
 
         @Override
         public void onRead(BluetoothDevice device) {
@@ -175,11 +171,16 @@ public class MainActivity extends BaseActivity {
         public void onConnectionNetwork(String mac) {
             super.onConnectionNetwork(mac);
             long time = System.currentTimeMillis() - timeMillis;
-            Log.e(BleConfig.TAG, "配网成功++" + time/1000);
+            Log.e(BleConfig.TAG, "配网成功++" + time / 1000);
+        }
+
+        @Override
+        public void onConnectionBleReturn(int returnCode) {
+            super.onConnectionBleReturn(returnCode);
+            Log.e(BleConfig.TAG, "return Code" + returnCode);
         }
     };
     private long timeMillis;
-
 
 
     @Override
@@ -199,7 +200,7 @@ public class MainActivity extends BaseActivity {
 
     private void initBle() {
         try {
-            mManager = BleManager.getInstance(getApplicationContext(),editTextSid.getText().toString(),editTextPsd.getText().toString());
+            mManager = BleManager.getInstance(getApplicationContext(), editTextSid.getText().toString(), editTextPsd.getText().toString());
             mManager.registerBleListener(mLisenter);
             if (mManager != null) {
                 if (!mManager.isBleEnable()) {//蓝牙未打开

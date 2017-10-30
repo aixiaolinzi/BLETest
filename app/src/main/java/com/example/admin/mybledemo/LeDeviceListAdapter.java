@@ -77,7 +77,7 @@ public class LeDeviceListAdapter extends BaseAdapter {
         final BleDevice device = mLeDevices.get(i);
         final String deviceName = device.getmBleName();
         final String deviceRSSI = BluetoothDevice.EXTRA_RSSI;
-        if (device.isConnectting()) {
+        if (device.isConnecting()) {
             viewHolder.deviceState.setText("正在连接中...");
         } else if (device.isConnected()) {
             viewHolder.deviceState.setText("已连接");

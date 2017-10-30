@@ -134,7 +134,7 @@ public class TestActivity extends AppCompatActivity {
                             if (device.isConnected()) {
                                 mLeDeviceListAdapter.getDevice(i).setConnectionState(BleConfig.BleStatus.CONNECTED);
                                 Toast.makeText(TestActivity.this, R.string.line_success, Toast.LENGTH_SHORT).show();
-                            } else if (device.isConnectting()) {
+                            } else if (device.isConnecting()) {
                                 mLeDeviceListAdapter.getDevice(i).setConnectionState(BleConfig.BleStatus.CONNECTING);
                             } else {
                                 mLeDeviceListAdapter.getDevice(i).setConnectionState(BleConfig.BleStatus.DISCONNECT);
@@ -162,10 +162,6 @@ public class TestActivity extends AppCompatActivity {
             //硬件mcu 返回数据
         }
 
-        @Override
-        public void onWrite(BluetoothGatt gatt) {
-            //可以选择性实现该方法   不需要则不用实现
-        }
 
         @Override
         public void onRead(BluetoothDevice device) {

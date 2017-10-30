@@ -9,8 +9,9 @@ import java.util.UUID;
 
 /**
  * Ble蓝牙的类
+ *
  * @author yzz
- * Created on 2017/10/26 16:47 
+ *         Created on 2017/10/26 16:47
  */
 
 public class BleConfig {
@@ -35,7 +36,8 @@ public class BleConfig {
             BleStatus.Stop,
             BleStatus.ConnectTimeOut,
             BleStatus.OnReady,
-            BleStatus.ConnectionNetwork
+            BleStatus.ConnectionNetwork,
+            BleStatus.ConnectionBleReturn
     })
 
     @Retention(RetentionPolicy.SOURCE)
@@ -47,14 +49,15 @@ public class BleConfig {
         int ServicesDiscovered = 2512;
         int Read = 2513;
         int Write = 2514;
-        int Changed = 2515;
+        int Changed = 2515;//onCharacteristicChanged变化
         int DescriptorWriter = 2516;
         int DescriptorRead = 2517;
         int Start = 2518;
         int Stop = 2519;
         int ConnectTimeOut = 2510;
         int OnReady = 2520; //onDescriptorWrite测试获得数据成功，可以读取了
-        int ConnectionNetwork = 2521;
+        int ConnectionNetwork = 2521;//最后配网成功
+        int ConnectionBleReturn = 2522;//配网返回的值
     }
 
     /**
@@ -67,10 +70,6 @@ public class BleConfig {
      * Connection time-out limit
      */
     public final static int CONNECT_TIME_OUT = 10 * 1000;
-
-    /* Manufacturer Specific Data. */
-    public static final int BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA = 0xFF;
-
 
     /**
      * The service UUID string  0000180a-0000-1000-8000-00805f9b34fb
@@ -91,6 +90,17 @@ public class BleConfig {
 
     public static final String WIFI_SSID = "s";
     public static final String WIFI_P = "p";
+
+
+    /* Manufacturer Specific Data. */
+    public static final int BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA = 0xFF;
+
+    /*Return code */
+    public static final int BLE_RETURN_LENGTH = 0x05;//返回码的基本长度
+    public static final int BLE_RETURN_RIGHT = 0x00;//正确
+    public static final int BLE_RETURN_WRONG_FORMAT = 0x01;//格式不对
+    public static final int BLE_RETURN_LACK_SSID = 0x02;//缺少SSID
+    public static final int BLE_RETURN_NETWORK_FAILURE = 0x03;//配网失败
 
     public static final String LENOVOASSISTANT = "LenovoAssistant";
     public static final String TAG = "蓝牙配网";
