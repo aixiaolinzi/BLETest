@@ -1,6 +1,7 @@
 package com.example.admin.mybledemo.annotation;
 
 import android.app.Activity;
+import android.view.View;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +16,10 @@ import java.lang.reflect.Method;
 public class LLAnnotation {
 
     public static void viewInit(Activity activity){
+        dealView(activity);
+        dealOnClick(activity);
+    }
+    private static void dealView(Activity activity) {
         Class<?> cls = activity.getClass();
         Field[] fields = cls.getDeclaredFields();
         if(fields != null && fields.length > 0){
@@ -45,5 +50,51 @@ public class LLAnnotation {
             }
         }
     }
+    private static void dealOnClick(Activity activity) {
 
+        Class<?> cls=activity.getClass();
+        Method[] declaredMethods = cls.getDeclaredMethods();
+        for (Method declaredMethod : declaredMethods) {
+            OnClick onClick = declaredMethod.getAnnotation(OnClick.class);
+            if (onClick!=null){
+                int value = onClick.value();
+                View view = activity.findViewById(value);
+
+                if (view!=null){
+                    view.setOnClickListener(new DeclaredOnClickListener(declaredMethod,activity));
+                }
+            }
+        }
+
+        
+    }
+
+
+
+
+    private static class DeclaredOnClickListener implements View.OnClickListener {
+        private Method mMethod;
+        private Object mHandlerType;
+
+        public DeclaredOnClickListener(Method method, Object handlerType) {
+            mMethod = method;
+            mHandlerType = handlerType;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // 4.反射执行方法
+            mMethod.setAccessible(true);
+            try {
+                mMethod.invoke(mHandlerType, v);
+            } catch (Exception e) {
+                e.printStackTrace();
+                try {
+                    mMethod.invoke(mHandlerType, null);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
 }

@@ -6,12 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 
- * @author yzz
- * Created on 2017/11/6 16:55
+ * 描述:
+ * Created by yzz on 2017/11/6.
  */
-@Target(value = ElementType.FIELD)
+@Target(value = ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ViewInit {
+public @interface OnClick {
     int value() default -1;
 }

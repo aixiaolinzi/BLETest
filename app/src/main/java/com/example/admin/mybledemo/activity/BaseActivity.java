@@ -17,7 +17,7 @@ import com.example.admin.mybledemo.R;
 /**
  * 基础类
  * @author yzz
- * Created on 2017/11/6 16:26 
+ * Created on 2017/11/6 16:55
  */
 public class BaseActivity extends AppCompatActivity {
 

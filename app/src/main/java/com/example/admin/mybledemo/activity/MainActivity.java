@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.admin.mybledemo.LeDeviceListAdapter;
 import com.example.admin.mybledemo.R;
 import com.example.admin.mybledemo.annotation.LLAnnotation;
+import com.example.admin.mybledemo.annotation.OnClick;
 import com.example.admin.mybledemo.annotation.ViewInit;
 
 import com.orhanobut.logger.Logger;
@@ -37,8 +38,9 @@ import cn.com.heaton.blelibrary.ble.BleDevice;
 
 /**
  * 主Activity
+ *
  * @author yzz
- * Created on 2017/11/6 16:27 
+ *         Created on 2017/11/6 16:59
  */
 public class MainActivity extends BaseActivity {
 
@@ -234,21 +236,6 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         setTitle("扫描界面");
         mConnectedNum = (TextView) findViewById(R.id.connected_num);
-        mSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        mUpdateOta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<BleDevice> list = mManager.getConnetedDevices();
-
-            }
-        });
         // Initializes list view adapter.
         if (mManager != null) {
             mLeDeviceListAdapter = new LeDeviceListAdapter(this);
@@ -270,6 +257,16 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @OnClick(R.id.sendData)
+    private void onClick11(View view) {
+        Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_LONG).show();
+    }
+
+    @OnClick(R.id.updateOta)
+    private void onUp(View view) {
+        Toast.makeText(getApplicationContext(), "测试测试", Toast.LENGTH_LONG).show();
     }
 
 
