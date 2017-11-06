@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 /**
  * 描述:
  * Created by yzz on 2017/11/6.
+ *
+ * OnClick事件的反射
  */
 @Target(value = ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

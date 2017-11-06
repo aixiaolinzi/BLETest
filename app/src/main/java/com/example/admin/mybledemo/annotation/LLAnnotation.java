@@ -19,6 +19,11 @@ public class LLAnnotation {
         dealView(activity);
         dealOnClick(activity);
     }
+
+    /**
+     * 找控件
+     * @param activity
+     */
     private static void dealView(Activity activity) {
         Class<?> cls = activity.getClass();
         Field[] fields = cls.getDeclaredFields();
@@ -50,8 +55,12 @@ public class LLAnnotation {
             }
         }
     }
-    private static void dealOnClick(Activity activity) {
 
+    /**
+     * 处理点击事件
+     * @param activity
+     */
+    private static void dealOnClick(Activity activity) {
         Class<?> cls=activity.getClass();
         Method[] declaredMethods = cls.getDeclaredMethods();
         for (Method declaredMethod : declaredMethods) {
@@ -59,14 +68,11 @@ public class LLAnnotation {
             if (onClick!=null){
                 int value = onClick.value();
                 View view = activity.findViewById(value);
-
                 if (view!=null){
                     view.setOnClickListener(new DeclaredOnClickListener(declaredMethod,activity));
                 }
             }
         }
-
-        
     }
 
 
