@@ -36,7 +36,9 @@ import cn.com.heaton.blelibrary.ble.BleManager;
 import cn.com.heaton.blelibrary.ble.BleDevice;
 
 /**
- * Activity for scanning and displaying available Bluetooth LE devices.
+ * 主Activity
+ * @author yzz
+ * Created on 2017/11/6 16:27 
  */
 public class MainActivity extends BaseActivity {
 

@@ -2,9 +2,10 @@ package cn.com.heaton.blelibrary.ble;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-
 /**
- * Created by LiuLei on 2017/5/3.
+ *
+ * @author yzz
+ * Created on 2017/11/6 16:21
  * Bluetooth factory
  */
 

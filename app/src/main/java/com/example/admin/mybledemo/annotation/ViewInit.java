@@ -6,9 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by LiuLei on 2017/6/9.
+ * 
+ * @author yzz
+ * Created on 2017/11/6 16:26 
  */
-
 @Target(value = ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ViewInit {

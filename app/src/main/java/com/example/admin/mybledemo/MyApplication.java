@@ -3,33 +3,12 @@ package com.example.admin.mybledemo;
 import android.app.Application;
 
 import com.orhanobut.logger.Logger;
-
-
 /**
  * 应用入口
- * Created by LiuLei on 2016/4/25.
- * 　　　　　　　　┏┓　　　┏┓
- * 　　　　　　　┏┛┻━━━┛┻┓
- * 　　　　　　　┃　　　　　　　┃
- * 　　　　　　　┃　　　━　　　┃
- * 　　　　　　　┃　＞　　　＜　┃
- * 　　　　　　　┃　　　　　　　┃
- * 　　　　　　　┃...　⌒　...　┃
- * 　　　　　　　┃　　　　　　　┃
- * 　　　　　　　┗━┓　　　┏━┛
- * 　　　　　　　　　┃　　　┃　Code is far away from bug with the animal protecting
- * 　　　　　　　　　┃　　　┃   神兽保佑,代码无bug
- * 　　　　　　　　　┃　　　┃
- * 　　　　　　　　　┃　　　┃
- * 　　　　　　　　　┃　　　┃
- * 　　　　　　　　　┃　　　┃
- * 　　　　　　　　　┃　　　┗━━━┓
- * 　　　　　　　　　┃　　　　　　　┣┓
- * 　　　　　　　　　┃　　　　　　　┏┛
- * 　　　　　　　　　┗┓┓┏━┳┓┏┛
- * 　　　　　　　　　　┃┫┫　┃┫┫
- * 　　　　　　　　　　┗┻┛　┗┻┛
+ * @author yzz
+ * Created on 2017/11/6 16:24
  */
+
 public class MyApplication extends Application {
 
     private static MyApplication mApplication;
@@ -39,7 +18,7 @@ public class MyApplication extends Application {
         super.onCreate();
         mApplication = this;
         //修改打印的tag值
-        Logger.init("LiuLei");
+        Logger.init("yzz");
 
     }
 
@@ -48,33 +27,3 @@ public class MyApplication extends Application {
     }
 
 }
-/**
- * 　                   &#######&
- * 　                   #########&
- * 　                  ###########&
- * 　                 ##&#$###$  ##&
- * 　                ;###  ####& ####
- * 　                ###;#######  ####
- * 　               &###########  #####
- * 　              ;#########o##   #####
- * 　              #########  ##   ######
- * 　            ;########### ###   ######
- * 　            ################   #######
- * 　           #################;   ######,
- * 　           #############$####   #######
- * 　          ########&;,########   &#######
- * 　        ;#########   &###       ########
- * 　        ##########    ###;      ########
- * 　       ###########     ##$      ########
- * 　       ###########     ###     #########
- * 　       ##########&$     ##    ;########
- * 　       #########, !      ##   ########
- * 　      ;########&          ##  #######
- * 　        #&#####            ##   &#&
- * 　          o# &#             #;
- * 　             ##             ##
- * 　             &#&           ;##
- * 　              ##           ###
- * <p/>
- * 　　　　　　　　　葱官赐福　　百无禁忌
- */

@@ -29,6 +29,7 @@ import java.util.UUID;
 /**
  * @author yzz
  *         Created on 2017/10/26 16:46
+ *  蓝牙的服务类
  */
 
 @SuppressLint("NewApi")

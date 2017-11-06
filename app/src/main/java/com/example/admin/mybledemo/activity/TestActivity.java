@@ -37,7 +37,6 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
         //初始化注解  替代findViewById
         LLAnnotation.viewInit(this);
-
         try {
             mManager = BleManager.getInstance(this,"","");
             mManager.registerBleListener(mLisenter);

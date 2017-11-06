@@ -8,7 +8,8 @@ import java.lang.reflect.Method;
 
 /**
  * 自定义注解   替代findViewById
- * Created by LiuLei on 2017/6/9.
+ * @author yzz
+ * Created on 2017/11/6 16:25
  */
 
 public class LLAnnotation {

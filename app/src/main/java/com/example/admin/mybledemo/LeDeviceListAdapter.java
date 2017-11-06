@@ -12,12 +12,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cn.com.heaton.blelibrary.ble.BleDevice;
-
 /**
- * Created by LiuLei on 2016/11/26.
+ *
+ * @author yzz
+ * Created on 2017/11/6 16:22
+ *
  * 适配器里面使用的是封装后的数据。
  */
-
 
 public class LeDeviceListAdapter extends BaseAdapter {
     private ArrayList<BleDevice> mLeDevices;
