@@ -47,7 +47,6 @@ import static cn.com.heaton.blelibrary.ble.BleConfig.WIFI_SSID;
 
 public class BleManager<T extends BleDevice> {
 
-    private final static String TAG = "BleManager";
     public static final int REQUEST_ENABLE_BT = 1;
     private Context mContext;
     private static BleLisenter bleLisenter;
@@ -289,7 +288,7 @@ public class BleManager<T extends BleDevice> {
 
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
-            Log.e(TAG, "onLeScan: " + device);
+            Log.e(BleConfig.TAG, "onLeScan: " + device);
             if (!contains(device)) {
                 T bleDevice = (T) new BleDevice(device);
                 if (bleLisenter != null) {
@@ -375,9 +374,9 @@ public class BleManager<T extends BleDevice> {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     b = gatt.requestMtu(256);
                 }
-                Log.e(TAG, "是否成功设置+++" + b);
+                Log.e(BleConfig.TAG, "是否成功设置+++" + b);
             } else {
-                Log.e(TAG, "onServicesDiscovered received连接GATT失败: " + status);
+                Log.e(BleConfig.TAG, "onServicesDiscovered received连接GATT失败: " + status);
             }
         }
 
@@ -386,7 +385,7 @@ public class BleManager<T extends BleDevice> {
             /**
              * 特征的问题读成功
              */
-            Log.e(TAG, "onCharacteristicRead:" + status);
+            Log.e(BleConfig.TAG, "onCharacteristicRead:" + status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 mHandler.obtainMessage(BleConfig.BleStatus.Read, gatt.getDevice()).sendToTarget();
             }
@@ -415,7 +414,7 @@ public class BleManager<T extends BleDevice> {
             System.out.println("--------onCharacteristicChanged----- " + "通知回调的值+" + Arrays.toString(characteristic.getValue()));
             synchronized (mLocker) {
                 byte[] valueGet = characteristic.getValue();
-                Log.i(TAG, gatt.getDevice().getAddress() + " -- onCharacteristicWrite: " + (characteristic.getValue() != null ? Arrays.toString(characteristic.getValue()) : ""));
+                Log.i(BleConfig.TAG, gatt.getDevice().getAddress() + " -- onCharacteristicWrite: " + (characteristic.getValue() != null ? Arrays.toString(characteristic.getValue()) : ""));
                 mHandler.obtainMessage(BleConfig.BleStatus.Changed, characteristic).sendToTarget();
                 if (valueGet != null) {
                     if (valueGet.length > BleConfig.BLE_RETURN_LENGTH) {
@@ -474,9 +473,9 @@ public class BleManager<T extends BleDevice> {
         // Loops through available GATT Services.
         for (BluetoothGattService gattService : gattServices) {
             uuid = gattService.getUuid().toString();
-            Log.d(TAG, "displayGattServices: " + uuid);
+            Log.d(BleConfig.TAG, "displayGattServices: " + uuid);
             if (uuid.equals(BleConfig.UUID_SERVICE_TEXT)) {
-                Log.d(TAG, "service_uuid: " + uuid);
+                Log.d(BleConfig.TAG, "service_uuid: " + uuid);
                 List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
                 for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
                     if (gattCharacteristic.getUuid().toString().equals(BleConfig.UUID_CHARACTERISTIC_TEXT)) {
@@ -497,7 +496,7 @@ public class BleManager<T extends BleDevice> {
 
     public void setCharacteristicNotification(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, boolean enabled) {
         if (mBluetoothAdapter == null || gatt == null) {
-            Log.d(TAG, "BluetoothAdapter is null");
+            Log.d(BleConfig.TAG, "BluetoothAdapter is null");
             return;
         }
         gatt.setCharacteristicNotification(characteristic, enabled);
@@ -588,11 +587,11 @@ public class BleManager<T extends BleDevice> {
                 mConnectedAddressList = new ArrayList<>();
             }
             if (mConnectedAddressList.contains(address)) {
-                Log.d(TAG, "This is device already connected.");
+                Log.d(BleConfig.TAG, "This is device already connected.");
                 return true;
             }
             if (mBluetoothAdapter == null || address == null) {
-                Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
+                Log.w(BleConfig.TAG, "BluetoothAdapter not initialized or unspecified address.");
                 return false;
             }
             // Previously connected device. Try to reconnect. ()
@@ -605,7 +604,7 @@ public class BleManager<T extends BleDevice> {
             //根据地址得到BluetoothDevice蓝牙设备的信息
             final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
             if (device == null) {
-                Log.d(TAG, "no device");
+                Log.d(BleConfig.TAG, "no device");
                 return false;
             }
             currentDevice = device;
@@ -619,7 +618,7 @@ public class BleManager<T extends BleDevice> {
             BluetoothGatt bluetoothGatt = device.connectGatt(mContext, false, mGattCallback);
             if (bluetoothGatt != null) {
                 mBluetoothGattMap.put(address, bluetoothGatt);
-                Log.d(TAG, "Trying to create a new connection.");
+                Log.d(BleConfig.TAG, "Trying to create a new connection.");
                 return true;
             }
             return false;
@@ -639,7 +638,7 @@ public class BleManager<T extends BleDevice> {
             }
             if (mBluetoothAdapter == null || mBluetoothGattMap.get(address) == null) {
 //            Log.e(TAG, mBluetoothGattMap.get(address).getDevice().getAddress());
-                Log.w(TAG, "BluetoothAdapter not initialized");
+                Log.w(BleConfig.TAG, "BluetoothAdapter not initialized");
                 return;
             }
             mNotifyIndex = 0;
@@ -662,7 +661,7 @@ public class BleManager<T extends BleDevice> {
         byte[] dataByte = getDataByte(ssid, mPass);
         synchronized (mLocker) {
             if (mBluetoothAdapter == null || mBluetoothGattMap.get(address) == null) {
-                Log.w(TAG, "BluetoothAdapter not initialized");
+                Log.w(BleConfig.TAG, "BluetoothAdapter not initialized");
                 return false;
             }
             BluetoothGattCharacteristic gattCharacteristic = mWriteCharacteristicMap.get(address);
@@ -671,7 +670,7 @@ public class BleManager<T extends BleDevice> {
                     gattCharacteristic.setValue(dataByte);
                     BluetoothGatt gatt = mBluetoothGattMap.get(address);
                     boolean result1 = gatt.writeCharacteristic(gattCharacteristic);
-                    Log.d(TAG, address + " -- write result:" + result1 + " -- write data:" + Arrays.toString(dataByte));
+                    Log.d(BleConfig.TAG, address + " -- write result:" + result1 + " -- write data:" + Arrays.toString(dataByte));
                     return result1;
                 } catch (Exception e) {
                     e.printStackTrace();
