@@ -96,7 +96,7 @@ public class LLAnnotation {
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    mMethod.invoke(mHandlerType, null);
+                    mMethod.invoke(mHandlerType);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }

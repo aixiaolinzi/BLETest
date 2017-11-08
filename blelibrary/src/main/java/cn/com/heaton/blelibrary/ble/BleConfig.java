@@ -105,4 +105,6 @@ public class BleConfig {
     public static final String LENOVOASSISTANT = "LenovoAssistant";
     public static final String TAG = "蓝牙配网";
 
+    public static final boolean AUTO_CONNECT = false;
+
 }

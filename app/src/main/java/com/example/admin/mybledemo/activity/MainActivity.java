@@ -204,7 +204,8 @@ public class MainActivity extends BaseActivity {
 
     private void initBle() {
         try {
-            mManager = BleManager.getInstance(getApplicationContext(), editTextSid.getText().toString(), editTextPsd.getText().toString());
+//            mManager = BleManager.getInstance(getApplicationContext(), editTextSid.getText().toString(), editTextPsd.getText().toString());
+            mManager = BleManager.getInstance(getApplicationContext(), "newifiixj", "12345678");
             mManager.registerBleListener(mLisenter);
             if (mManager != null) {
                 if (!mManager.isBleEnable()) {//蓝牙未打开

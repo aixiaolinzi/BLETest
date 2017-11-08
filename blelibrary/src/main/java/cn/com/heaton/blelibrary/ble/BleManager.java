@@ -297,9 +297,11 @@ public class BleManager<T extends BleDevice> {
                 }
                 mScanDevices.add(bleDevice);
                 String name = bleDevice.getmBleName();
-                if (!TextUtils.isEmpty(name) && name.startsWith(BleConfig.LENOVOASSISTANT)) {
-                    scanLeDevice(false);
-                    connect(bleDevice.getBleAddress());
+                if (BleConfig.AUTO_CONNECT) {
+                    if (!TextUtils.isEmpty(name) && name.startsWith(BleConfig.LENOVOASSISTANT)) {
+                        scanLeDevice(false);
+                        connect(bleDevice.getBleAddress());
+                    }
                 }
             }
         }
@@ -487,7 +489,6 @@ public class BleManager<T extends BleDevice> {
                     Log.e(BleConfig.TAG, "setCharaNotification");
                     setCharacteristicNotification(gatt, mNotifyCharacteristics.get(mNotifyIndex++), true);
                 }
-
                 sendData(address, mSsid, mPsw);
             }
         }
