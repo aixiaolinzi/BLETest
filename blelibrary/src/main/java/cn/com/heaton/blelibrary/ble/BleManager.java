@@ -10,11 +10,17 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -52,6 +58,7 @@ public class BleManager<T extends BleDevice> {
     private static BleLisenter bleLisenter;
     private boolean mScanning;
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothLeScanner mScanner;
     private final ArrayList<T> mScanDevices = new ArrayList<>();
     private final ArrayList<T> mConnetedDevices = new ArrayList<>();
     private ArrayList<T> mConnectingDevices = new ArrayList<>();
@@ -76,6 +83,10 @@ public class BleManager<T extends BleDevice> {
     private static String mSsid, mPsw;
 
 
+    /**
+     *用来处理超时的问题。
+     * 和主界面的回调不在使用
+     */
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -154,10 +165,15 @@ public class BleManager<T extends BleDevice> {
             }
         }
     };
+    private ScanCallback scanCallback;
+
 
     protected BleManager(Context context) {
         mContext = context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mScanner = mBluetoothAdapter.getBluetoothLeScanner();
+        }
         mBleFactory = new BleFactory<>(context);
     }
 
@@ -260,7 +276,11 @@ public class BleManager<T extends BleDevice> {
                 @Override
                 public void run() {
                     mScanning = false;
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mScanner.stopScan(scanCallback);
+                    } else {
+                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    }
                     if (bleLisenter != null) {
                         bleLisenter.onStop();
                     }
@@ -268,18 +288,75 @@ public class BleManager<T extends BleDevice> {
             }, BleConfig.SCAN_PERIOD);
 
             mScanning = true;
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+                scanCallback = new ScanCallback() {
+                    @Override
+                    public void onScanResult(int callbackType, ScanResult result) {
+                        super.onScanResult(callbackType, result);
+                        Log.e("扫描onScanResult", "callbackType++" + callbackType + "++result++" + result);
+                        BluetoothDevice device = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                            device = result.getDevice();
+
+                            if (!contains(device)) {
+                                T bleDevice = (T) new BleDevice(device);
+                                if (bleLisenter != null) {
+                                    bleLisenter.onLeScan(bleDevice, result.getRssi(), result.getScanRecord().getBytes());
+                                }
+                                mScanDevices.add(bleDevice);
+                                String name = bleDevice.getmBleName();
+                                if (BleConfig.AUTO_CONNECT) {
+                                    if (!TextUtils.isEmpty(name) && name.startsWith(BleConfig.LENOVOASSISTANT)) {
+                                        scanLeDevice(false);
+                                        connect(bleDevice.getBleAddress());
+                                    }
+                                }
+                            }
+
+                        }
+
+
+
+                    }
+
+                    @Override
+                    public void onBatchScanResults(List<ScanResult> results) {
+                        super.onBatchScanResults(results);
+                        Log.e("扫描onBatchScanResults", "List<ScanResult>++" + results.size());
+                    }
+
+                    @Override
+                    public void onScanFailed(int errorCode) {
+                        super.onScanFailed(errorCode);
+                        Log.e("扫描onScanFailed", "errorCode++" + errorCode);
+                    }
+                };
+
+                List<ScanFilter> scanFilters = new ArrayList<>();
+                ScanFilter scanFilter = new ScanFilter.Builder().setDeviceName("Lnv_200007_8cb9").build();
+                scanFilters.add(scanFilter);
+//                mScanner.startScan(scanCallback);
+                mScanner.startScan(scanFilters,new ScanSettings.Builder().build(),scanCallback);
+            } else {
+                mBluetoothAdapter.startLeScan(mLeScanCallback);
+            }
             if (bleLisenter != null) {
                 bleLisenter.onStart();
             }
         } else {
             mScanning = false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mScanner.stopScan(scanCallback);
+            } else {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            }
             if (bleLisenter != null) {
                 bleLisenter.onStop();
             }
         }
     }
+
 
     /**
      * 开启扫描得到的监听。

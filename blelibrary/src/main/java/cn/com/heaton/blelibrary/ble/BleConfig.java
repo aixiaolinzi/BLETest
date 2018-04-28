@@ -64,7 +64,7 @@ public class BleConfig {
      * The default scan time
      * 扫描10s超时
      */
-    public final static int SCAN_PERIOD = 10000;
+    public final static int SCAN_PERIOD = 100000;
 
     /**
      * Connection time-out limit
