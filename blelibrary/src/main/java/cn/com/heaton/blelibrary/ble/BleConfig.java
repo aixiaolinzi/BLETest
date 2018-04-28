@@ -27,7 +27,6 @@ public class BleConfig {
             BleStatus.DISCONNECT,
             BleStatus.ConnectionChanged,
             BleStatus.ServicesDiscovered,
-            BleStatus.Read,
             BleStatus.Write,
             BleStatus.Changed,
             BleStatus.DescriptorWriter,
@@ -47,7 +46,6 @@ public class BleConfig {
         int DISCONNECT = 2503;
         int ConnectionChanged = 2511;//0，断开；1，连接上；2，正在连接。
         int ServicesDiscovered = 2512;
-        int Read = 2513;
         int Write = 2514;
         int Changed = 2515;//onCharacteristicChanged变化
         int DescriptorWriter = 2516;

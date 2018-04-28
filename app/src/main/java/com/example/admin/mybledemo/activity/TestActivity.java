@@ -19,7 +19,7 @@ import com.orhanobut.logger.Logger;
 import java.util.Arrays;
 
 import cn.com.heaton.blelibrary.ble.BleConfig;
-import cn.com.heaton.blelibrary.ble.BleLisenter;
+import cn.com.heaton.blelibrary.ble.BleListener;
 import cn.com.heaton.blelibrary.ble.BleManager;
 import cn.com.heaton.blelibrary.ble.BleDevice;
 
@@ -75,7 +75,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
 
-    private BleLisenter mLisenter = new BleLisenter() {
+    private BleListener mLisenter = new BleListener() {
         @Override
         public void onStart() {
             super.onStart();

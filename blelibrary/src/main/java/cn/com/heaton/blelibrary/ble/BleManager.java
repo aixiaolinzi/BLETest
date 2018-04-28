@@ -8,25 +8,20 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.text.method.MetaKeyKeyListener;
 import android.util.Log;
 
 import java.lang.reflect.GenericArrayType;
@@ -39,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 import static cn.com.heaton.blelibrary.ble.BleConfig.WIFI_P;
 import static cn.com.heaton.blelibrary.ble.BleConfig.WIFI_SSID;
@@ -55,7 +49,7 @@ public class BleManager<T extends BleDevice> {
 
     public static final int REQUEST_ENABLE_BT = 1;
     private Context mContext;
-    private static BleLisenter bleLisenter;
+    private static BleListener bleLisenter;
     private boolean mScanning;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mScanner;
@@ -84,7 +78,7 @@ public class BleManager<T extends BleDevice> {
 
 
     /**
-     *用来处理超时的问题。
+     * 用来处理超时的问题。
      * 和主界面的回调不在使用
      */
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -124,11 +118,6 @@ public class BleManager<T extends BleDevice> {
                 case BleConfig.BleStatus.Changed:
                     if (bleLisenter != null) {
                         bleLisenter.onChanged((BluetoothGattCharacteristic) msg.obj);
-                    }
-                    break;
-                case BleConfig.BleStatus.Read:
-                    if (bleLisenter != null) {
-                        bleLisenter.onRead((BluetoothDevice) msg.obj);
                     }
                     break;
                 case BleConfig.BleStatus.DescriptorWriter:
@@ -317,7 +306,6 @@ public class BleManager<T extends BleDevice> {
                         }
 
 
-
                     }
 
                     @Override
@@ -337,7 +325,7 @@ public class BleManager<T extends BleDevice> {
                 ScanFilter scanFilter = new ScanFilter.Builder().setDeviceName("Lnv_200007_8cb9").build();
                 scanFilters.add(scanFilter);
 //                mScanner.startScan(scanCallback);
-                mScanner.startScan(scanFilters,new ScanSettings.Builder().build(),scanCallback);
+                mScanner.startScan(scanFilters, new ScanSettings.Builder().build(), scanCallback);
             } else {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
             }
@@ -414,6 +402,8 @@ public class BleManager<T extends BleDevice> {
      * 连接方法的回调
      */
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+
+
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             /**
@@ -464,7 +454,9 @@ public class BleManager<T extends BleDevice> {
              */
             Log.e(BleConfig.TAG, "onCharacteristicRead:" + status);
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                mHandler.obtainMessage(BleConfig.BleStatus.Read, gatt.getDevice()).sendToTarget();
+                if (bleLisenter != null) {
+                    bleLisenter.onRead(gatt.getDevice());
+                }
             }
         }
 
@@ -622,7 +614,7 @@ public class BleManager<T extends BleDevice> {
      *
      * @param bleListener Listener
      */
-    public void registerBleListener(BleLisenter bleListener) {
+    public void registerBleListener(BleListener bleListener) {
 
         this.bleLisenter = (bleListener);
     }
@@ -632,7 +624,7 @@ public class BleManager<T extends BleDevice> {
      *
      * @param bleListener Listener
      */
-    public void unRegisterBleListener(BleLisenter bleListener) {
+    public void unRegisterBleListener(BleListener bleListener) {
         if (bleListener == null) {
             return;
         }

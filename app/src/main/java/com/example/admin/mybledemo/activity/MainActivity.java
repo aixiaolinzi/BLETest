@@ -29,10 +29,9 @@ import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import cn.com.heaton.blelibrary.ble.BleConfig;
-import cn.com.heaton.blelibrary.ble.BleLisenter;
+import cn.com.heaton.blelibrary.ble.BleListener;
 import cn.com.heaton.blelibrary.ble.BleManager;
 import cn.com.heaton.blelibrary.ble.BleDevice;
 
@@ -67,7 +66,7 @@ public class MainActivity extends BaseActivity {
      * 辅助处理监听，连接上还是断开都是这里处理的。
      * 刷新页面也是这里
      */
-    private BleLisenter mLisenter = new BleLisenter() {
+    private BleListener mLisenter = new BleListener() {
         @Override
         public void onStart() {
             super.onStart();

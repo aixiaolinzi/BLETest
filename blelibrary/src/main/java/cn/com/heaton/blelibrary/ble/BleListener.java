@@ -11,7 +11,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
  * Created on 2017/10/30 14:31
  */
 
-public abstract class BleLisenter {
+public abstract class BleListener {
 
     /**
      * Start the scan
@@ -46,8 +46,6 @@ public abstract class BleLisenter {
     public void onRead(BluetoothDevice device) {
     }
 
-    ;
-
     /**
      * MCU data sent to the app when the data callback call is setNotify
      *
@@ -56,8 +54,6 @@ public abstract class BleLisenter {
     public void onChanged(BluetoothGattCharacteristic characteristic) {
     }
 
-    ;
-
     /**
      * Set the notification feature to be successful and can send data
      *
@@ -65,8 +61,6 @@ public abstract class BleLisenter {
      */
     public void onReady(BluetoothDevice device) {
     }
-
-    ;
 
     /**
      * Set the notification here when the service finds a callback       setNotify
@@ -101,28 +95,12 @@ public abstract class BleLisenter {
     public void onDescriptorRead(BluetoothGatt gatt) {
     }
 
-    ;
-
-    /**
-     * When the callback when the error, such as app can only connect four devices
-     * at the same time forcing the user to connect more than four devices will call back the method
-     *
-     * @param errorCode errorCode
-     */
-    public void onError(int errorCode) {
-    }
-
     /**
      * device connect timeout
      */
     public void onConnectTimeOut() {
     }
 
-    /**
-     * Unable to initialize Bluetooth
-     */
-    public void onInitFailed() {
-    }
 
     /**
      * 配网成功
